@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+@theme {
+  --color-mint: #a8e6cf;
+  --color-teal: #55b3c5;
+  --color-teal-dark: #2a8a9e;
+  --color-deep: #1a5f6f;
+  --color-navy: #0f3d4a;
+  --color-off-white: #f7fbfc;
+  
+  --background-image-mrewa-nav: linear-gradient(to right, #a8e6cf 0%, #7ec8c8 40%, #55b3c5 100%);
+
+  --radius-brand: 12px;
+  --radius-brand-lg: 20px;
+  
+  --shadow-brand-sm: 0 2px 8px rgba(15, 61, 74, 0.08);
+  --shadow-brand-md: 0 4px 20px rgba(15, 61, 74, 0.12);
+}
+
+@layer base {
+  html {
+    /* Enables the sliding effect */
+    scroll-behavior: smooth;
+    /* Stops the scroll 80px early so the fixed nav doesn't overlap text */
+    scroll-padding-top: 5rem; 
+    overflow-y: auto;
+  }
+  
+  body {
+    @apply bg-white text-navy antialiased;
+    min-height: 100vh;
+  }
+}
+@keyframes ping-slow {
+  75%, 100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

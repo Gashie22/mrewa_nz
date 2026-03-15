@@ -1,80 +1,83 @@
-import React, { useState, useEffect } from "react";
-import Layout from "./components/Layout";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import TechSpecsPage from "./pages/TechSpecsPage";
-// Assuming these pages exist based on your previous prompts:
-import AuditService from "./pages/AuditServicePage";
-import Divisions from "./pages/DivisionsPage";
-import About from "./pages/About";
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { supabase } from './lib/supabaseClient';
 
-export default function App() {
-  const [currentPage, setCurrentPage] = useState("home");
+// Layout Components
+import Navbar from './components/Navbar';
+import WhatsAppButton from './components/WhatsAppButton';
 
-  // Smooth scroll to top when changing pages
+// Section Components
+import Hero from './components/Hero';
+import About from './components/About';
+import Approach from './components/Approach';
+import Services from './components/Services';
+import Contact from './components/Contact';
+
+// Page Components
+import Auth from './components/Auth';
+import Dashboard from './components/Dashboard'; // Note: check if you put this in /pages or /components
+
+function App() {
+  const [session, setSession] = useState(null);
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case "home":
-        return <Home onExplore={setCurrentPage} />;
-      
-      case "tech-specs":
-        return <TechSpecsPage />;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
 
-      case "audit-service":
-        return <AuditService />;
-      
-      case "divisions":
-        return <Divisions />;
+    return () => subscription.unsubscribe();
+  }, []);
 
-      case "about":
-        return <About />;
-      
-
-      default:
-        return <Home onExplore={setCurrentPage} />;
-    }
-  };
+  // Marketing Site Layout (Navbar + Footer included)
+  const LandingPage = () => (
+    <div className="relative min-h-screen">
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Approach />
+        <Services />
+        <Contact />
+        <WhatsAppButton />
+      </main>
+      <footer className="bg-[#0f3d4a] py-12 border-t border-white/5 text-center">
+        <p className="text-white/40 text-[10px] uppercase font-bold tracking-[2px]">
+          © {new Date().getFullYear()} MREWA Technical Services. All Rights Reserved.
+        </p>
+      </footer>
+    </div>
+  );
 
   return (
-    <Layout>
-      {/* --- NAVIGATION --- */}
-      <Navbar 
-        activePage={currentPage} 
-        onNavigate={setCurrentPage} 
-      />
+    <Router>
+      <Routes>
+        {/* Marketing Site */}
+        <Route path="/" element={<LandingPage />} />
+        
+        {/* Auth Page (Minimal - No global Navbar) */}
+        <Route 
+          path="/login" 
+          element={!session ? <Auth /> : <Navigate to="/dashboard" />} 
+        />
 
-      {/* --- DYNAMIC PAGE CONTENT --- */}
-      <div className="pt-16"> {/* Padding to account for fixed Navbar */}
-        {renderPage()}
-      </div>
-
-      {/* --- FOOTER --- */}
-      <footer className="bg-white border-t border-slate-100 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div>
-            <h2 className="text-xl font-black italic uppercase tracking-tighter text-slate-900">
-              MREWA <span className="text-blue-600">Technical</span>
-            </h2>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">
-              Engineering Excellence Across the Pacific
-            </p>
-          </div>
-          
-          <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-500">
-            <button onClick={() => setCurrentPage('home')} className="hover:text-blue-600 transition-colors">Home</button>
-            <button onClick={() => setCurrentPage('tech-specs')} className="hover:text-blue-600 transition-colors">Tech Specs</button>
-            <a href="#privacy" className="hover:text-blue-600 transition-colors">Privacy</a>
-          </div>
-
-          <p className="text-slate-400 text-[10px] font-medium">
-            © 2026 MREWA Technical Services. All Rights Reserved.
-          </p>
-        </div>
-      </footer>
-    </Layout>
+        {/* The Unified Dashboard (Standalone Layout) */}
+        <Route 
+          path="/dashboard" 
+          element={
+            session ? (
+              <Dashboard session={session} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          } 
+        />
+      </Routes>
+    </Router>
   );
 }
+
+export default App;
