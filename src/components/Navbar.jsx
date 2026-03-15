@@ -98,7 +98,7 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${
-      isScrolled ? 'py-2 shadow-lg' : 'py-3 shadow-md'
+      isScrolled ? 'py-2 lg:py-2.5 shadow-lg' : 'py-3 lg:py-3.5 shadow-md'
     } bg-gradient-to-r from-[#a8e6cf] via-[#7ec8c8] to-[#55b3c5]`}> 
       
       <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
@@ -112,13 +112,13 @@ const Navbar = () => {
           <img 
             src={logoImg} 
             alt="MREWA Logo" 
-            className="h-8 sm:h-[42px] w-auto object-contain" 
+            className="h-8 lg:h-[42px] w-auto object-contain" 
           />
           <div className="flex flex-col leading-tight">
-            <span className="text-white text-xl sm:text-[1.6rem] font-black tracking-[1px] sm:tracking-[2px] uppercase">
+            <span className="text-white text-xl lg:text-[1.6rem] font-black tracking-[1px] lg:tracking-[2px] uppercase">
               MREWA
             </span>
-            <span className="text-white/85 text-[0.6rem] sm:text-[0.7rem] font-medium tracking-[2px] sm:tracking-[3px] uppercase">
+            <span className="text-white/85 text-[0.6rem] lg:text-[0.7rem] font-medium tracking-[2px] lg:tracking-[3px] uppercase">
               Technical Services
             </span>
           </div>
@@ -127,14 +127,14 @@ const Navbar = () => {
         {/* Mobile Menu Button - Visible on mobile/tablet */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="xl:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors"
+          className="lg:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors"
           aria-label="Toggle menu"
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         {/* Desktop Menu - Hidden on mobile/tablet */}
-        <div className="hidden xl:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2">
           {isHomePage && navLinks.map((link) => (
             <a
               key={link.id}
@@ -178,7 +178,7 @@ const Navbar = () => {
 
       {/* Mobile Menu - Slide Down Panel */}
       <div 
-        className={`xl:hidden absolute top-full left-0 right-0 bg-gradient-to-r from-[#a8e6cf] via-[#7ec8c8] to-[#55b3c5] shadow-lg transition-all duration-300 overflow-hidden ${
+        className={`lg:hidden absolute top-full left-0 right-0 bg-gradient-to-r from-[#a8e6cf] via-[#7ec8c8] to-[#55b3c5] shadow-lg transition-all duration-300 overflow-hidden ${
           isMobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
