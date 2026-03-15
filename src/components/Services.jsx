@@ -5,48 +5,102 @@ const serviceData = {
   electrical: {
     title: "Electrical",
     icon: <Zap size={20} />,
-    description: "Comprehensive electrical engineering solutions, from high-voltage industrial installations to precision domestic wiring.",
+    compliance: "All work meets NZ Electrical Safety Regulations, AS/NZS 3000, and EWRB standards.",
+    description: "Our comprehensive electrical services cover everything from residential upgrades to heavy industrial maintenance, ensuring all work meets strict NZ safety regulations.",
     sections: [
       {
-        label: "Industrial & Plant",
-        items: ["Motor Control Centers (MCC)", "VSD & Soft Starter Installations", "Power Distribution Boards", "Cable Racking & Industrial Wiring"]
+        label: "Residential Installations",
+        items: ["Installing switches, sockets, and light fixtures", "Rewiring and upgrading older houses", "Electrical panel upgrades and replacements", "EV charger installations", "Safety inspections & pre-purchase checks", "Heat pump installations"]
       },
       {
-        label: "Commercial & Domestic",
-        items: ["Energy Efficient Lighting", "Backup Power & UPS Systems", "General Maintenance", "Security Systems Wiring"]
+        label: "Maintenance & Repairs",
+        items: ["Fault finding and troubleshooting", "Emergency electrical repairs and callouts", "Power point and outlet repairs"]
+      },
+      {
+        label: "Commercial Fit-Outs",
+        items: ["New electrical installations for fit-outs", "Lighting design for offices and retail", "Commercial switchboard servicing", "Power point and outlet installations"]
+      },
+      {
+        label: "Industrial",
+        items: ["Standby shift work coverage", "Motor control centres (MCCs)", "Reactive and preventive maintenance", "SCADA system design", "Variable speed drives (VSDs)", "Instrumentation"]
+      },
+      {
+        label: "Infrastructure",
+        items: ["Streetlighting", "Solar & grid connect", "Water & wastewater treatment infrastructure", "EV charging infrastructure", "Power distribution & fuse box upgrades"]
+      },
+      {
+        label: "Safety & Compliance",
+        items: ["Electrical safety inspections", "Testing and certification", "BWOF & Caravan Warrant of Fitness", "Testing and tagging"]
       }
     ]
   },
   automation: {
     title: "Automation",
     icon: <Cpu size={20} />,
-    description: "Advanced industrial automation and process control systems designed to optimize production and reduce downtime.",
+    description: "End-to-end automation solutions—from initial consulting and system design through to installation, programming, and ongoing maintenance.",
     sections: [
       {
-        label: "Control Systems",
-        items: ["PLC Programming & Fault Finding", "SCADA & HMI Development", "Process Instrumentation", "Control Panel Design"]
+        label: "Home Automation",
+        items: ["HVAC & BMS Integration", "Smart switch and lighting control", "Smart locks, cameras, and sensors", "Refrigeration monitoring with alerting", "Whole-home smart technology retrofit"]
+      },
+      {
+        label: "Control System Engineering",
+        items: ["PLC Programming (pumps, motors, conveyors)", "SCADA Systems & real-time dashboards", "DCS Solutions for food and dairy", "Trend tracking and alarm response"]
+      },
+      {
+        label: "Consulting & Strategy",
+        items: ["Process Audits & Assessments", "ROI-Driven Roadmaps", "Scalable technology strategies"]
+      },
+      {
+        label: "Robotics & Mechatronics",
+        items: ["Robotic Work Cells (welding, handling)", "Collaborative Robots (Cobots)", "Quality inspection automation"]
+      },
+      {
+        label: "IIoT & Lifecycle",
+        items: ["Smart Sensors & data capture", "Predictive Maintenance analysis", "IT/OT Convergence", "Staff training and optimization"]
       }
     ]
   },
   refrigeration: {
     title: "Refrigeration & AC",
     icon: <Snowflake size={20} />,
-    description: "Specialized HVAC-R solutions including cold room commissioning and industrial chiller maintenance.",
+    compliance: "NZ Building Code G4 | MPI accreditation (in process) | RMP compliance",
+    description: "Specialist HVAC-R solutions ranging from custom design and engineering to industrial blast freezing and 24/7 breakdown response.",
     sections: [
       {
-        label: "Cooling Solutions",
-        items: ["Cold Room Installations", "Industrial Chiller Maintenance", "Air Conditioning Systems", "Refrigerant Gas Recovery"]
+        label: "Design & Installation",
+        items: ["Custom HVAC&R system design", "PS1-PS4 documentation", "Commercial HVAC (VRF, split systems)", "Industrial coolstores & blast freezers", "Residential heat pumps"]
+      },
+      {
+        label: "Specialist Services",
+        items: ["Blast freezing & Chill down", "Cold storage solutions", "Refrigerated container services (reefers)", "CO₂ natural refrigerant systems", "Commercial display cabinets"]
+      },
+      {
+        label: "Maintenance & Air",
+        items: ["24/7 breakdown response", "Preventative programmes", "Duct cleaning and sanitisation", "Mechanical ventilation design", "Air quality improvements"]
+      },
+      {
+        label: "Controls & Energy",
+        items: ["BMS integration", "Energy-efficient retrofits", "Remote monitoring", "Performance optimisation"]
       }
     ]
   },
   handyman: {
     title: "Handyman",
     icon: <Wrench size={20} />,
-    description: "Diverse technical support for comprehensive facility management and mechanical repairs.",
+    description: "Your go-to solution for everyday fixes and property improvements, bridging the gap between complex technical projects and regular upkeep.",
     sections: [
       {
-        label: "Mechanical & Structural",
-        items: ["Steel Fabrication", "General Plumbing", "Pump Repairs", "On-site Technical Support"]
+        label: "Property Maintenance",
+        items: ["General repairs", "Carpentry", "Plumbing basics", "Ongoing upkeep for homes & businesses"]
+      },
+      {
+        label: "Fixtures & Fittings",
+        items: ["Furniture assembly", "Shelving & curtain rails", "Picture hanging", "Minor joinery"]
+      },
+      {
+        label: "Preventive Care",
+        items: ["Regular property audits", "Roof, gutter & perimeter checks", "Electrical and furniture fittings", "Preventing minor issues becoming major"]
       }
     ]
   }
@@ -56,17 +110,17 @@ const Services = () => {
   const [activeTab, setActiveTab] = useState('electrical');
 
   return (
-    <section id="services" className="py-24 bg-[#f7fbfc]"> {/* Matches --off-white from styles.css */}
+    <section id="services" className="py-24 bg-[#f7fbfc]">
       <div className="container mx-auto px-6">
         
         {/* Header matched to index.html */}
         <div className="text-center mb-16">
           <span className="text-[#55b3c5] font-bold tracking-[4px] uppercase text-sm">What We Do</span>
-          <h2 className="text-4xl md:text-5xl font-black text-[#0f3d4a] mt-4 italic uppercase">Our Services</h2>
+          <h2 className="text-4xl md:text-5xl font-black text-[#0f3d4a] mt-4 italic uppercase">Our Comprehensive Services</h2>
           <div className="h-1.5 w-24 bg-gradient-to-r from-[#a8e6cf] via-[#7ec8c8] to-[#55b3c5] mx-auto mt-4 rounded-full" />
         </div>
 
-        {/* Tab Selection matched to .tab-btn in styles.css */}
+        {/* Tab Selection */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {Object.entries(serviceData).map(([key, value]) => (
             <button
@@ -84,34 +138,43 @@ const Services = () => {
           ))}
         </div>
 
-        {/* Content Display matched to .service-content-area in styles.css */}
-        <div className="bg-white rounded-[20px] p-8 md:p-12 border border-slate-100 shadow-xl animate-in">
+        {/* Content Display */}
+        <div className="bg-white rounded-[20px] p-8 md:p-12 border border-slate-100 shadow-xl">
           <div className="flex flex-col lg:flex-row gap-12">
             
-            {/* Left: Summary */}
+            {/* Left Column: Summary & Compliance */}
             <div className="lg:w-1/3">
               <div className="bg-[#f7fbfc] p-6 rounded-2xl shadow-sm inline-block mb-6 text-[#55b3c5]">
                 {React.cloneElement(serviceData[activeTab].icon, { size: 40 })}
               </div>
-              <h3 className="text-3xl font-black text-[#0f3d4a] mb-4 italic uppercase">{serviceData[activeTab].title}</h3>
+              <h3 className="text-3xl font-black text-[#0f3d4a] mb-4 italic uppercase">{serviceData[activeTab].title} Services</h3>
+              
+              {serviceData[activeTab].compliance && (
+                <div className="mb-6 p-4 bg-[#a8e6cf]/10 border border-[#a8e6cf]/30 rounded-xl">
+                  <div className="flex items-center gap-2 text-[#2a8a9e] font-bold text-xs uppercase tracking-wider mb-2">
+                    <CheckCircle2 size={14} /> Compliance & Standards
+                  </div>
+                  <p className="text-[#3d6670] text-xs font-bold leading-relaxed">
+                    {serviceData[activeTab].compliance}
+                  </p>
+                </div>
+              )}
+
               <p className="text-[#3d6670] leading-relaxed mb-6 font-medium">
                 {serviceData[activeTab].description}
               </p>
-              <div className="flex items-center gap-2 text-[#2a8a9e] font-bold text-sm bg-[#a8e6cf]/20 px-4 py-2 rounded-full w-fit">
-                <CheckCircle2 size={16} /> Technical Excellence Guaranteed
-              </div>
             </div>
 
-            {/* Right: Detailed List matched to .service-list in styles.css */}
-            <div className="lg:w-2/3 grid sm:grid-cols-2 gap-8">
+            {/* Right Column: Detailed Grid */}
+            <div className="lg:w-2/3 grid sm:grid-cols-2 gap-x-8 gap-y-10">
               {serviceData[activeTab].sections.map((section, idx) => (
                 <div key={idx} className="space-y-4">
-                  <h4 className="text-lg font-bold text-[#1a5f6f] border-l-4 border-[#a8e6cf] pl-3 uppercase tracking-wider">
+                  <h4 className="text-sm font-black text-[#1a5f6f] border-l-4 border-[#a8e6cf] pl-3 uppercase tracking-widest">
                     {section.label}
                   </h4>
-                  <ul className="space-y-3">
+                  <ul className="space-y-2.5">
                     {section.items.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[#1e3a42] text-sm font-medium">
+                      <li key={i} className="flex items-start gap-2 text-[#1e3a42] text-sm font-medium leading-snug">
                         <span className="mt-1.5 w-1.5 h-1.5 bg-[#55b3c5] rounded-full shrink-0" />
                         {item}
                       </li>

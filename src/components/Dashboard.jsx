@@ -35,7 +35,7 @@ import {
   Home,
   Activity,
   Camera,
-  Image as ImageIcon,
+  ImageIcon,
   ExternalLink,
 } from "lucide-react";
 import NotificationsDrawer from "../components/NotificationsDrawer";
@@ -182,6 +182,7 @@ const Dashboard = ({ session }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast, showToast } = useToast();
 
   const [newRequest, setNewRequest] = useState({
@@ -194,26 +195,37 @@ const Dashboard = ({ session }) => {
 
   const MREWA_WHATSAPP = import.meta.env.VITE_MREWA_WHATSAPP;
   const MREWA_EMAIL = import.meta.env.VITE_MREWA_EMAIL;
+  const ADMIN_IDS = (import.meta.env.VITE_ADMIN_IDS || "").split(",").map(id => id.trim());
 
-  // Process Admin Emails (converts "email1,email2" -> ["email1", "email2"])
-  const ADMIN_LIST = import.meta.env.VITE_ADMIN_EMAILS?.split(",") || [];
-  const isAdmin = ADMIN_LIST.some(
-    (email) =>
-      email.trim().toLowerCase() === session?.user?.email?.toLowerCase(),
-  );
-
-  // Process Admin IDs
-  const ADMIN_IDS = import.meta.env.VITE_ADMIN_IDS?.split(",") || [];
-
+  // FIXED: Logic to fetch both Admin status and Requests in the correct order
   const fetchRequests = async (silent = false) => {
     if (!silent) setIsLoading(true);
     try {
+      // 1. Always check DB for current admin status first
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', session.user.id)
+        .single();
+      
+      const currentIsAdmin = profile?.is_admin || false;
+      setIsAdmin(currentIsAdmin);
+
+      // 2. Build query based on that fresh status
       let query = supabase.from("service_requests").select("*");
-      if (!isAdmin) query = query.eq("user_id", session.user.id);
+      
+      // If NOT admin, restrict to own requests
+      if (!currentIsAdmin) {
+        query = query.eq("user_id", session.user.id);
+      }
+      
       const { data, error } = await query
         .order("status", { ascending: false })
         .order("created_at", { ascending: false });
+      
       if (!error) setRequests(data || []);
+    } catch (err) {
+      console.error("Dashboard fetch failed", err);
     } finally {
       setIsLoading(false);
     }
@@ -229,15 +241,17 @@ const Dashboard = ({ session }) => {
   };
 
   useEffect(() => {
+    // Initial Load
     fetchRequests();
     fetchUnreadCount();
 
+    // Realtime Subscriptions
     const requestsChannel = supabase
       .channel("requests-live")
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "service_requests" },
-        () => fetchRequests(true),
+        () => fetchRequests(true) // Refresh when data changes
       )
       .subscribe();
 
@@ -251,7 +265,7 @@ const Dashboard = ({ session }) => {
           table: "notifications",
           filter: `user_id=eq.${session.user.id}`,
         },
-        () => fetchUnreadCount(),
+        () => fetchUnreadCount()
       )
       .subscribe();
 
@@ -275,9 +289,7 @@ const Dashboard = ({ session }) => {
           .from("service-images")
           .upload(filePath, file);
         if (uploadError) throw uploadError;
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from("service-images").getPublicUrl(filePath);
+        const { data: { publicUrl } } = supabase.storage.from("service-images").getPublicUrl(filePath);
         imageUrl = publicUrl;
       }
 
@@ -318,13 +330,7 @@ const Dashboard = ({ session }) => {
 
       showToast("Request submitted successfully");
       setIsModalOpen(false);
-      setNewRequest({
-        type: SERVICE_TYPES[0],
-        description: "",
-        address: "",
-        contactNumber: "",
-        imageFile: null,
-      });
+      setNewRequest({ type: SERVICE_TYPES[0], description: "", address: "", contactNumber: "", imageFile: null });
       fetchRequests(true);
     } catch (error) {
       showToast("Submission failed", "error");
@@ -356,10 +362,7 @@ const Dashboard = ({ session }) => {
 
   const handleDeleteRequest = async (id) => {
     if (!window.confirm("Delete this request permanently?")) return;
-    const { error } = await supabase
-      .from("service_requests")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("service_requests").delete().eq("id", id);
     if (!error) {
       showToast("Request deleted", "error");
       fetchRequests(true);
@@ -413,10 +416,8 @@ const Dashboard = ({ session }) => {
             <StatsGrid
               stats={{
                 pending: requests.filter((r) => r.status === "pending").length,
-                inProgress: requests.filter((r) => r.status === "in-progress")
-                  .length,
-                completed: requests.filter((r) => r.status === "completed")
-                  .length,
+                inProgress: requests.filter((r) => r.status === "in-progress").length,
+                completed: requests.filter((r) => r.status === "completed").length,
               }}
             />
             <RequestsList
